@@ -1,0 +1,173 @@
+\documentclass[conference]{IEEEtran}
+
+%%% LICS SUGGESTED PACKAGES %%%
+%\usepackage{algorithmic}
+%\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+%\usepackage{fixltx2e}
+%\usepackage{stfloats}
+%\usepackage{dblfloatfix}
+%\usepackage{url}
+
+\usepackage{subfiles}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{pict2e}
+\usepackage[mathscr]{euscript}
+\usepackage{tikz-cd}
+\usepackage{caption, floatrow}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{bussproofs}
+\usepackage{epigraph}
+\usepackage{upgreek}
+\usepackage{csquotes}
+
+% formatting
+\newcommand{\cnt}[1]{\begin{center}#1\end{center}}
+\newcommand{\arr}[2]{
+  \[\arraycolsep=1pt\def\arraystretch{1.4}
+    \begin{array}{#1}#2\end{array}\]}
+\newcolumntype{L}{>$l<$}
+\newcolumntype{R}{>$r<$}
+\newcolumntype{C}{>$c<$}
+
+% theorems
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{corollary}{Corollary}[theorem]
+
+% fonts
+\newcommand{\msf}[1]{\mathsf{#1}}
+\newcommand{\mbb}[1]{\mathbb{#1}}
+\newcommand{\msc}[1]{\mathscr{#1}}
+\newcommand{\mrm}[1]{\mathrm{#1}}
+\newcommand{\mtt}[1]{\mathtt{#1}}
+
+\newcommand{\ob}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand{\obb}[1]{\ddot{#1}}
+\newcommand{\obshort}[1]{\mkern 8.5mu\overline{\mkern-8.5mu#1\mkern-8.5mu}\mkern 8.5mu}
+\newcommand{\rtail}{\rightarrowtail}
+
+% proofs etc
+\newcommand{\prf}[1]{\begin{prooftree}#1\end{prooftree}}
+\newcommand{\ax}[2]{\Axiom$#1 \; \fCenter \vdash \; #2$}
+\newcommand{\axempty}{\Axiom$\fCenter$}
+\newcommand{\infer}[2]{\UnaryInf$#1 \; \fCenter \vdash \; #2$}
+\newcommand{\binfer}[2]{\BinaryInf$#1 \; \fCenter \vdash \; #2$}
+\newcommand{\tinfer}[2]{\TrinaryInf$#1 \; \fCenter \vdash \; #2$}
+\newcommand{\rlab}[1]{\RightLabel{$#1$}}
+\newcommand{\llab}[1]{\LeftLabel{$#1$}}
+\newcommand{\axx}[3]{\Axiom$#1 \; \fCenter #2 \; #3$}
+\newcommand{\inferr}[3]{\UnaryInf$#1 \; \fCenter #2 \; #3$}
+\newcommand{\binferr}[3]{\BinaryInf$#1 \; \fCenter #2 \; #3$}
+\newcommand{\tinferr}[3]{\TrinaryInf$#1 \; \fCenter #2 \; #3$}
+
+% categories
+\newcommand{\T}{\mrm{T}}
+\newcommand{\Set}{\mrm{Set}}
+\newcommand{\Cat}{\mrm{Cat}}
+\newcommand{\AT}{\mrm{AlgThy}}
+\newcommand{\Thy}{\mrm{Thy}}
+\newcommand{\op}{\mrm{op}}
+\newcommand{\Sub}{\mrm{Sub}}
+\newcommand{\Hey}{\mrm{Hey}}
+\newcommand{\Pos}{\mrm{Pos}}
+\newcommand{\NN}{\mbb{N}}
+\newcommand{\F}{\mbb{F}}
+\newcommand{\A}{\mrm{A}}
+\newcommand{\C}{\mrm{C}}
+\newcommand{\V}{\mrm{V}}
+
+% monoid
+\newcommand{\M}{\mtt{M}}
+\newcommand{\e}{\mtt{e}}
+\newcommand{\m}{\mtt{m}}
+
+% topos
+\newcommand{\pow}{\msc{P}}
+
+% theory
+\newcommand{\tts}{\mtt{s}}
+\newcommand{\ttt}{\mtt{t}}
+\newcommand{\ttop}{\mtt{op}}
+\newcommand{\TT}{\mtt{T}}
+\newcommand{\X}{\mtt{X}}
+\newcommand{\tri}{\triangleright}
+\newcommand{\ttx}{\mtt{x}}
+\newcommand{\ttf}{\mtt{f}}
+\newcommand{\ttg}{\mtt{g}}
+
+% th.rho
+\newcommand{\N}{\mtt{N}}
+\newcommand{\PP}{\mtt{P}}
+\newcommand{\tto}{\mtt{out}}
+\newcommand{\tti}{\mtt{in}}
+\newcommand{\ttr}{\mtt{@}}
+\newcommand{\ttd}{\mtt{\ast}}
+\newcommand{\ttp}{\mtt{\; \vert \; }}
+\newcommand{\obttp}{\; \ob{\vert} \; }
+\newcommand{\ttz}{\mtt{0}}
+\newcommand{\n}{\mtt{n}}
+\newcommand{\p}{\mtt{p}}
+\newcommand{\q}{\mtt{q}}
+\newcommand{\tta}{\mtt{a}}
+\newcommand{\ttb}{\mtt{b}}
+\newcommand{\ttc}{\mtt{c}}
+\newcommand{\ttl}{\mtt{l}}
+\newcommand{\tty}{\mtt{y}}
+\newcommand{\ttrr}{\mtt{r}}
+\newcommand{\ttoo}{\mtt{o}}
+
+
+
+
+
+
+
+\begin{document}
+\title{Structural Type Theory\\ of Higher Order Languages}
+
+\author{
+\IEEEauthorblockN{Christian Williams}
+\IEEEauthorblockA{Department of Mathematics\\
+University of California, Riverside\\
+williams@math.ucr.edu}
+\and
+\IEEEauthorblockN{Mike Stay}
+\IEEEauthorblockA{Pyrofex\\
+Salt Lake City, Utah\\
+stay@pyrofex.net}}
+
+\maketitle
+
+
+% As a general rule, do not put math, special symbols or citations in the abstract.
+\begin{abstract}
+The abstract goes here.
+\end{abstract}
+
+\subfile{tex/intro.tex} % Introduction
+\subfile{tex/hoats.tex} % Higher order algebraic theories
+\subfile{tex/topos.tex} % Presheaves and internal logic
+\subfile{tex/stype.tex} % Structural types
+\subfile{tex/apply.tex} % Applications
+\subfile{tex/tysys.tex} % The Type System
+\subfile{tex/concl.tex} % Conclusion, Acknolwedgements
+
+\bibliographystyle{IEEEtran}
+\bibliography{stthol.bib}
+
+
+\end{document}
+
+

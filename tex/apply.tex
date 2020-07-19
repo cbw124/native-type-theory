@@ -1,0 +1,61 @@
+\section{Namespace Logic}
+\label{sec:namelog}
+
+The motivation of namespace logic is to develop a theory of the structure of names as used in distributed computing. It demonstrates the utility of reflection, thereby drawing a sharp contrast between the atomic names of the $\pi$-calculus and the structured names of the $\uprho$-calculus.
+
+% \begin{displayquote}
+%   Starting from the practical end of things, whether we consider MAC addresses, IP addresses, domain names or URL's it is clear that distributed computing is practiced, today, using names. Moreover, it is essential to the programs that administer as well as to the ones that compute over this distributed computing infrastructure that these names have structure. Thus, when we look to theory, especially a theory like the $\pi$-calculus, of computing based on interaction over named channels, to help us with this practice some story must be told about how the struture of these names contributes to interaction and computation over (channels named by) them. \cite{namespace}
+%   \end{displayquote}
+
+  The term ``namespace'' comes from thinking of a subset $\varphi(1) \subseteq \T(1,\N)$ as a space of locations in a network, or as a space of data which may be communicated. The namespace $\varphi$ might be a collection of trusted addresses for an organization or it could be a datatype, such as the XML schema.
+
+  Of course, since names are the references of processes, we expect the same reasoning for ``codespaces''. As we have seen, the framework of structural types does this and more: we have predicates for all $\T(-,\ttt)$, which in general give tuples of process and name contexts.
+
+  We have built all of the tools used in namespace logic, except for one. For types which involve infinitary operations, such as those which allow for an indeterminate number of operands, or those which predicate over all possible evolutions of a process, we need to add \textit{fixed point type constructors}.
+
+\subsection{Recursion}
+\label{ssec:rec}
+
+The final aspect of the type theory is limits and colimits.
+
+\begin{definition}
+  \label{sec:comp}
+  Let $\T$ be a second-order algebraic theory, and let $\omega_T:\T\to \Pos$ be the structural theory of $\T$. Let $\Phi:\tts_\omega\to \ttt_\omega$ be a morphism in the category of constructors of $\T$.
+
+  Because each $\tts_\omega$ is complete and cocomplete, the limit of $\Phi$ and the colimit of $\Phi$ exist, denoted
+$$\mrm{lim}\Phi = \bigwedge_{\varphi\in \tts_\omega}\Phi(\varphi)\quad\quad \text{and}\quad\quad \bigvee_{\varphi\in \tts_\omega}\Phi(\varphi).$$
+In the case that $\tts=\ttt$, denote the \textit{greatest fixed point} and \textit{least fixed point} as special limits and colimits:
+$$\nu\X.\Phi(\X):= \bigwedge_{\varphi\leq\Phi(\varphi)}\Phi(\varphi)\quad\quad\text{and}\quad\quad \mu\X.\Phi(\X):= \bigvee_{\Phi(\varphi)\leq \varphi}\Phi(\varphi).$$
+Define the \textbf{predicate completion} of $\T$ to be a choice of limit and colimit for every $\Phi:\tts_\omega\to \ttt_\omega$ in the category of constructors of $\T$:
+$$\T_{\mrm{colim}}^{\mrm{lim}}:= \sum_{\tts\in \T}\sum_{\ttt\in \T}\sum_{\Phi:\tts_\omega\to \ttt_\omega}(\mrm{lim}\Phi,\mrm{colim}\Phi).$$
+\end{definition}
+
+These provide the structural type theory with recursive types, which can be used to construct data types, to ensure certain persistent behavior, and for many other purposes. We demonstrate one simple example, and one which begins to illustrate the expressivity of namespace logic.
+
+\begin{example}
+  A general process in the $\uprho$ calculus is a parallel of a single-threaded ``parands'':
+$$\p = \p_1\ttp \dots \ttp \p_n.$$
+  When considering a predicate such as $\varphi=\ob{\tti}(\alpha,\N.\PP)$, one may require only that some parand inputs on $\alpha$; this is given by the predicate $\ob{\tti}(\alpha,\N.\PP)\ttp\PP$. But often, one may require a predicate to hold for every parand.
+  This is given by the recursive type which is analogous to the free monoid on a set:
+$$\varphi^*:= \nu\X.\; \varphi\ttp \X.$$
+\end{example}
+  
+  \begin{example}
+    Two important properties of a distributed system are \textit{liveness} and \textit{safety}. Suppose we have a namespace $\alpha$ of all names trusted by a system of processes $S$.
+    \cnt{Liveness : $S$ can always communicate on $\alpha$.\\
+    Safety : $S$ can never communicate on $\neg\alpha$.}
+
+  We can express these conditions as a recursive structural type.
+  $$\msf{sole.in}(\alpha) := \nu\X.\; [\ob{\tti}(\alpha,\N.\X)\ttp\PP] \land \neg[\ob{\tti}(\neg[\alpha],\N.\PP)\ttp \PP]$$
+  In effect, we are making a \textit{firewall}: a process satisfies this predicate if and only if
+  \arr{rlll}{
+    \p:\msf{sole.in}(\alpha) \equiv & \exists\; \tta: \alpha. & \;\p=\tti(\tta,\ttx.\q)\ttp \p'\\
+    \land & \forall\; \n:\N,\q[\ttx]:[\N,\PP]. & [\p=\tti(\n,\ttx.\q)\ttp \p'] \Rightarrow & [\n:\alpha \land \q:\msf{sole.in}(\alpha)]. }
+
+   One can see that the type-checking procedure is recursive; hence a term of type $\msf{sole.in}(\alpha)$ must be recursively defined, which can be done through reflection ($\S$\ref{ssec:rho}).
+  
+  The continuing process $\q$ has a free name -- how do we know that it can't receive a name $\ttb:\neg\alpha$, and then input on $\ttb$? While negation ($\S$\ref{sec:topos}) is boolean for closed terms, it is strictly intuitionistic for general contexts: the algorithm above, formalized in the presheaf topos, will ``detect'' if there exists a substitution which allows a process to input on $\neg\alpha$.  The correctness of the type theory is that of the internal logic.
+
+  % By constructing a process which uses this type, such as $\tti(\n,\ttx.\p):\ob{\tti}(\N,\chi.\msf{sole.in}(\chi))$, the communication of the the continuing process $\p$ is controlled and understood.
+  
+\end{example}

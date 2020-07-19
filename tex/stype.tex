@@ -1,0 +1,121 @@
+\documentclass[stthol.tex]{subfiles}
+\begin{document}
+
+\section{Structural types}
+\label{sec:stypes}
+
+We can now lift the operations of a theory to the level of sieves, to create type constructors.
+
+\begin{definition}
+  \label{def:lift}
+  Let $\ttf:\prod_{i=1}^n[\prod_{j=1}^{n_i}\tts_{ij},\ttt_i]\to \ttt$ be an operation in a second-order theory $\T$. Define the \textbf{lifting} of $\ttf$ to be the composite given below.
+  \[\begin{tikzcd}
+      \prod_{i=1}^n [\prod_{j=1}^{n_i}\pow(y(\tts_{ij})),\pow(y(\ttt_i))] \arrow[d,"{\prod\left[\lambda,id\right]}",swap]
+      \arrow[rr,"\ob{\ttf}",dotted] && \pow(y(\ttt))\\
+      \prod_{i=1}^n [\pow(\prod_{j=1}^{n_i}y(\tts_{ij})),\pow(y(\ttt_i))]  \arrow[r,"\prod\mrm{R}",swap] &
+      \prod_{i=1}^n \pow(y([\prod_{j=1}^{n_i}\tts_{ij},\ttt_i])) \arrow[r,"\sqcap",swap] &
+      \pow(y(\prod_{i=1}^n[\prod_{j=1}^{n_i}\tts_{ij},\ttt_i]))  \arrow[u,"\pow(\ttf)",swap]
+  \end{tikzcd}\]
+Hence for $(F_i:\prod_{j=1}^{n_i}\pow(y(\tts_{ij}))\to \pow(y(\ttt_i)))_{i=1}^n$,
+$$\ob{\ttf}(F_1,\dots,F_n)(\ttrr) = \{\ttf(u_1,\dots,u_n):\ttrr\to \ttt\; |\; \forall i.\; u_i \text{ respects } F_i\circ \lambda\}.$$
+\end{definition}
+
+% \begin{definition}
+%   \label{def:lift}
+%   Let $\ttf:\vec{\tts_1}.\ttt_1,\dots,\vec{\tts_n}.\ttt_n\to \ttt$ be an operation in a second-order theory $\T$. Define the \textbf{lifting} of $\ttf$ to be the composite:
+%   \[\begin{tikzcd}
+%       \prod_i^n \left(\prod_j^{n_i}\pow(y(\tts_{ij}))^\op\right)\times \pow(y(\ttt_i)) \arrow[rr,"\ob{\ttf}",dotted]
+%       \arrow[d,"\prod_i^n(\sqcap_\exists)\times\pow(y(\ttt_i))",swap] && \pow(y(\ttt))\\
+%       \prod_i^n \pow(\prod_j^{n_i}y(\tts_{ij}))^\op\times \pow(y(\ttt_i)) \arrow[r,"\prod_i^n (\multimap)",swap]
+%       & \prod_i^n \pow([\prod_j^{n_i}y(\tts_{ij}),y(\ttt_i)]) \arrow[r,"\sqcap_\exists",swap] &
+%       \pow(\prod_i^n([\prod_j^{n_i}y(\tts_{ij}),y(\ttt_i)])) \arrow[u,"\exists_\ttf",swap]
+%     \end{tikzcd}\]
+%   Hence for $\sigma_{ij}\rtail \T(-,\tts_{ij}), \tau_i\rtail \T(-,\ttt_i)$,
+%   \arr{l}{\ob{\ttf}((\vec{\sigma_1},\tau_1),\dots,(\vec{\sigma_n},\tau_n)(\ttrr)\\
+%     = \{\ttf(u_1(r),\dots,u_n(r)):\ttrr\to \ttt \; | \; \forall i.\; u_i\in ((\prod_j\sigma_{ij})\multimap \tau_i)(\ttrr)\}\\
+%     = \{\ttf(u_1(r),\dots,u_n(r)):\ttrr\to \ttt \; | \; \forall i.\; \forall \langle \ttx_1,\dots,\ttx_{n_i}\rangle:\tta\to \prod_j\tts_{ij}.\; \langle \vec{\ttx_i}\rangle\in \prod_j\sigma_{ij}(\tta)\Rightarrow \tilde{u_i}(r,\vec{\ttx_i})\in \tau_i(\tta)\}. }
+% \end{definition}
+
+We summarize the data of the lifting by giving a model of the theory in posets. We denote currying $\ttf:\tta\times \ttb\to \ttc$ by $\ttf^\bullet:\tta\to [\ttb,\ttc]$, and uncurrying $u:\tta\to [\ttb,\ttc]$ by $u^\circ:\tta\times \ttb\to \ttc$.
+
+\begin{theorem}
+  \label{sec:thm}
+  Let $\T = \langle (\msc{T},\msc{O},\msc{E}),\msc{X}\rangle$ be a second-order theory. The lifting (\ref{def:lift}) defines a colax functor
+  $$\omega_\T:\T\to\Pos.$$
+  Moreover, $\omega_\T$ preserves products and exponentials by construction, giving a ``colax model'' of $\T$ in $\Pos$.
+\end{theorem}
+\begin{proof}
+  Define
+  $$\omega_\T(\prod_{i=1}^n [\prod_{j=1}^{n_i}\tts_{ij},\ttt_i]) = \prod_{i=1}^n [\prod_{j=1}^{n_i}\pow(y(\tts_{ij})), \pow(y(\ttt_i))]$$
+  and for $\ttf: \prod_{i=1}^n [\prod_{j=1}^{n_i}\tts_{ij},\ttt_i] \to \ttt$ in $\msc{O}$ define
+  $$\omega_\T(\ttf) = \ob{\ttf}:\prod_{i=1}^n[\prod_{j=1}^{n_i}\pow(y(\tts_{ij})), \pow(y(\ttt_i))]\to \pow(y(\ttt)).$$
+  A general operation $\ttg:\prod_{k=1}^m[\prod_{l=1}^{m_k}\p_{kl},\q_k]\to \prod_{i=1}^n [\prod_{j=1}^{n_i}\tts_{ij},\ttt_i]$ is equivalent to an $n$-tuple of operations $\langle \ttg_i^\circ: \prod_{k=1}^m [\prod_{l=1}^{m_k}\p_{kl},\q_k]\times \prod_{j=1}^{n_i}\tts_{ij}\to \ttt_i\rangle_n$; we thereby define
+  $$\omega_\T(\ttg) = \langle\ob{\ttg_1^\circ}^\bullet,\dots,\ob{\ttg_n^\circ}^\bullet\rangle =:\ob{\ttg}:\prod_{k=1}^m[\prod_{l=1}^{m_k}\pow(y(\p_{kl})),\pow(y(\q_k))]\to \prod_{i=1}^n [\prod_{j=1}^{n_i}\pow(y(\tts_{ij})),\pow(y(\ttt_i))].$$
+  
+  We now give colax functoriality, by giving for the right diagram a canonical inclusion $\ob{\ttf\circ \ttg} \leq \ob{\ttf}\circ\ob{\ttg}$.
+  \[\begin{tikzcd}
+  \prod_{k=1}^m [\prod_{l=1}^{m_k}\p_{kl},\q_k] \arrow[d,"\ttg",swap] \arrow[dr,"\ttf\circ\ttg"] & & &
+  \prod_{k=1}^m[\prod_{l=1}^{m_k}\pow(y(\p_{kl})),\pow(y(\q_k))] \arrow[d,"\ob{\ttg}",swap] \arrow[dr,"\ob{\ttf\circ\ttg}"]\\
+      \prod_{i=1}^n [\prod_{j=1}^{n_i}\tts_{ij},\ttt_i] \arrow[r,"\ttf",swap] & \ttt & &
+      \prod_{i=1}^n [\prod_{j=1}^{n_i}\pow(y(\tts_{ij})),\pow(y(\ttt_i))] \arrow[r,"\ob{\ttf}",swap] & \pow(y(\ttt))
+    \end{tikzcd}\]
+
+  Let $(F_k:\prod_{l=1}^{m_k}\pow(y(\p_{kl}))\to\pow(y(\q_k)))_{k=1}^m$ be maps of subfunctor posets. Suppose $u\in \ob{\ttf\circ\ttg}(F_1,\dots,F_k)(\ttrr)$.
+  $$u=\ttf(\ttg(v_1,\dots,v_m)) \text{ for } (v_k:\ttrr\to \prod_{k=1}^m [\prod_{l=1}^{m_k}\p_{kl},\q_k])_{k=1}^m \text{ which each respect } F_k.$$
+
+  As $\ttg = \langle \ttg_1,\dots,\ttg_n\rangle$, we have that $\ttf(\ttg(\vec{v_k}))=\ttf(\ttg_1(\vec{v_k}),\dots,\ttg_n(\vec{v_k}))$. Because we want to show that
+  $$\ob{\ttf\circ\ttg}(F_1,\dots,F_m)(\ttrr)\subseteq \ob{\ttf}(\ob{\ttg}(F_1,\dots,F_m))(\ttrr)=\ob{\ttf}(\ob{\ttg_1^\circ}^\bullet(\vec{F_k}),\dots,\ob{\ttg_n^\circ}^\bullet(\vec{F_k}))(\ttrr),$$
+  we only need to show that each $\ttg_i(\vec{v_k})$ respects $\ob{\ttg_i^\circ}^\bullet(\vec{F_k})$. Expanding the definition, we check
+  $$\forall U\in \pow(\prod_{j=1}^{n_i}y(\tts_{ij})).\; \pow(g_i(\vec{v_k}))(\hat{\ttrr}\times U)\subseteq \ob{\ttg_i^\circ}^\bullet(\vec{F_k})(U);$$
+  where the latter sieve is given by
+  $$\ob{\ttg_i^\circ}^\bullet(\vec{F_k})(U)(\ttrr) = \{\ttg_i^\circ(\vec{v_k},(x_1,\dots,x_{n_i})):\ttrr\to \ttt_i\; |\; \forall k.\; (v_k \text{ respects } F_k) \land\; \forall j.\; (x_j\in U(\ttrr))\}.$$
+  Any element $u_i\in\pow(g_i(\vec{v_k}))(\hat{\ttrr}\times U)$ is automatically of this form. Hence we have the containment:
+  $$[u=\ttf(\ttg(v_1,\dots,v_m))\in \ob{\ttf\circ\ttg}(F_1,\dots,F_k)(\ttrr)] \Rightarrow [u\in \ob{\ttf}(\ob{\ttg}(F_1,\dots,F_m))(\ttrr)].$$
+  Because $\Pos$ is locally preordered, coherence of the colax structure is trivial. Hence, $\omega_\T:\T\to \Pos$ is a colax functor which preserves products and exponents.
+\end{proof}
+
+\begin{definition}
+  The \textbf{structural theory} of $\T$ is $\omega_\T$. The \textbf{category of constructors} of $\T$ is the full image of $\omega_\T$, the full subcategory $\omega_\T(\T)\subset\Pos$ containing all $\omega_\T(\tts)$. We abbreviate $\omega_\T(\tts)=: \tts_\omega$
+\end{definition}
+
+\begin{theorem}
+\label{sec:thm2}
+  The map of Thm. \ref{sec:thm} defines a 2-functor $\omega:\mrm{SOAT}\to (\iota\downarrow \Pos)$, where the latter is the comma 2-category of the inclusion $\iota:\mrm{SOAT}\rtail\mrm{2Cat}_{colax}$ and the constant $\Pos:1\to \mrm{2Cat}$.
+\end{theorem}
+
+\textbf{Note}\quad The colaxity of $\omega_\T$ is inevitable when lifting binding operations. For example, consider the $\uprho$-calculus term $\tti(-,x.\tto(x,-)):\N\times \PP\to \PP$. Then
+$$\ob{\tti}(\alpha,\ob{\tto^\bullet}(\varphi)) = \ob{\tti}(\alpha,\beta.\ob{\tto}(\beta,\varphi))\text{ , while }\ob{\tti\circ (\N\times \tto^\bullet)}(\alpha,\varphi) = \ob{\tti}(\alpha,x.\ob{\tto}(x,\varphi)).$$
+The lifting of the composite doesn't ``see'' the type-level binding for  constructors; nevertheless, the information is retained by the colax structure.
+
+Let $\T$ be the theory of the $\uprho$-calculus [$\S$\ref{ssec:rho}]. The lifted signature provides the algebraic type constructors of namespace logic [$\S$\ref{sec:namelog}].
+\begin{definition} The \textbf{$\omega\uprho$-calculus} has algebraic type constructors:
+\arr{cll@{\quad\quad}cll@{\quad\quad\quad}c@{\quad}l}{
+    \ob{\ttz}: &1 &\to \PP_\omega & \obttp: & \PP_\omega\times \PP_\omega & \to \PP_\omega\\
+    \ob{\ttr}: & \PP_\omega & \to \N_\omega &  \ob{\tto}: & \N_\omega\times\PP_\omega & \to \PP_\omega\\
+    \ob{\ttd}: & \N_\omega & \to \PP_\omega & \ob{\tti}: & \N_\omega\times [\N_\omega, \PP_\omega] & \to \PP_\omega. }
+\end{definition}
+
+We have products and exponent types given by the theory, and $y(\PP):1\to \PP_\omega$ and $y(\N):1\to \N_\omega$, the maximal sieves which we abbreviate to $\PP$ and $\N$. From these we generate the singleton sieves, such as $\ob{\ttz}(\PP)(\ttt)=\{\ttz\circ!_\ttt:\ttt\to \PP\}$, which we overload and denote by $\ob{\ttz}$.
+
+We can now form predicates on names, processes, or contexts thereof. For example, there is a predicate expressing that a process is \textit{single-threaded}: it is not null, and not the parallel of two non-null processes.
+$$\msf{single.thread} := \neg[\ob{\ttz}]\land \neg[\neg[\ob{\ttz}]\obttp \neg[\ob{\ttz}]]$$
+
+By lifting the binding operation of input, $\tti:\N\times [\N,\PP]\to \PP$, we gain significant expressivity. In the same way that input binds a free name variable, the type constructor $\ob{\tti}:\N_\omega\times [\N_\omega, \PP_\omega] \to \PP_\omega$ binds a free \textit{namespace} variableinto a constructor type constructor $\Phi:\N_\omega\to \PP_\omega$.
+
+Terms of this type are constructed by the following inference rule ($\S$\ref{sec:typeth}). We use the notation of categorical logic \cite{jacobs}: $\Xi$ is a type context, and $\Gamma$ is a term context.
+
+\cnt{ \prf{
+    \ax{\Xi,\alpha:\N_\omega \; | \; \Gamma}{\mtt{a:\alpha}}
+    \ax{\Xi,\chi:\N_\omega \; | \; \Gamma,\ttx:\chi}{\p:\Phi}
+    \binfer{\Xi \; | \; \Gamma}{\tti(\tta,\ttx.\p):\ob{\tti}(\alpha,\chi.\Phi).} } }
+
+In the untyped language, the process $\tti(\n,\ttx.\p)$ receives data over $\n$ and substitutes into $\p[\ttx]$. In the $\omega\uprho$-calculus, a term of type $\ob{\tti}(\alpha,\chi.\Phi)$ is a process which inputs on a name in $\alpha$, and receiving a name of type $\chi$ gives a process of type $\Phi(\chi)$. One can use typed input to design \textit{structural queries}: programs which search not by external attributes, but by the actual structure of code.
+
+% The typed communication rule:
+% \cnt{ \prf{
+%     \ax{\Xi,\alpha:\N_\omega \; | \; \Gamma}{\mtt{a:\alpha}}
+%     \ax{\Xi,\varphi:\PP_\omega \; | \; \Gamma}{\mtt{q:\varphi}}
+%     \ax{\Xi,\chi:\N_\omega \; | \; \Gamma,\ttx:\chi}{\p:\Phi}
+%     \tinfer{\Xi \; | \; \Gamma}{\mtt{o(a,q)\vert i(a,x.p) = p[@q/x]}:\Phi[\ob{@}\varphi].} } }
+
+\end{document}

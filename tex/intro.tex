@@ -1,0 +1,75 @@
+\documentclass[stthol.tex]{subfiles}
+\begin{document}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Motivation}
+\cite{IEEEexample:shellCTANpage} test\\
+RChain \cite{rchain} is a distributed computing system based on the  $\uprho$-calculus, or \textbf{r}eflective \textbf{h}igher-\textbf{o}rder $\pi$-calculus.
+
+The $\pi$-calculus \cite{pical} is a concurrent language: a program is not a sequence of instructions; it is a multiset of parallel processes, which evolves by \textit{communication} over names. Computation is interactive, providing a unified language for both computers and networks. The basic rule is:
+$$\mtt{COMM_{\pi}: \; \bar{n}a \; \vert \; n(x).p \; \Rightarrow \; p[a/x]}$$
+\cnt{\footnotesize{\{[output on name $\mtt{n}$ the name $\mtt{a}$] in parallel with [input on $\mtt{n}$, then $\mtt{p(x)}$]\} evolves to \{$\mtt{p(a)}$\}.}}
+
+The $\uprho$-calculus \cite{rhocal} adds \textit{reflection}: operators which turn processes (code) into names (data) and vice versa. Names are not atomic symbols; they are references to processes. Code can be sent as a message, then evaluated in another context -- this ``code mobility'' allows for deep self-reference.
+$$\mtt{COMM_{\uprho}: \; out(n,q) \; \vert \; in(n,x.p) \Rightarrow p[@q/x]}$$
+\cnt{\footnotesize{\{[output on name $\mtt{n}$ the process $\mtt{q}$] in parallel with [input on $\mtt{n}$, then $\mtt{p(x)}$]\} evolves to \{$\mtt{p(@q)}$\}.}}
+
+Names are both the data being communicated and the communication channels. Through reflection, names have form -- this provides intrinsic structure to networks. We aim to use this structure, to think globally about the web. Namespace Logic \cite{namespace} is a framework for this reasoning. The theory is:
+$$\mrm{NL} = \uprho \text{ calculus} + \text{predicate logic} + \text{recursion}.$$
+
+The signature of the language is augmented with that of predicate logic: a formula $\varphi$ of NL is a predicate on the structure of terms in the $\uprho$-calculus; this is used as a type, to condition programs. For example, in concurrent computation it is useful to determine whether a process is single-threaded:
+$$\msf{single.thread} := \neg[\ob{\ttz}]\land \neg[\neg[\ob{\ttz}] \obttp \neg[\ob{\ttz}]]$$
+\cnt{\footnotesize{``not the null process, and not the parallel of two non-null processes''.}}
+
+The types are \textit{structural} in that they are built from the same operations as terms. This provides an intrinsic type system for languages, which is especially useful for concurrent languages with reflection. The goal is to formalize the algorithm which equips a theory with structural types, predicate logic, and recursion.
+
+\subsection{Contribution}
+\label{ssec:contrib}
+
+We give an algorithm which takes a second-order algebraic theory and produces a polymorphic type theory with subtyping and recursion [Theorem \ref{sec:thm}, Theorem \ref{sec:thm2}, Definition \ref{sec:ty}].
+%$$\{\text{second-order algebraic theories}\}\; \mapsto\; \{\text{structural type theories with polymorphism and recursion}\}.$$
+
+A theory embeds by $y$ into a topos of presheaves; this admits a subobject functor $\pow$ to posets. %The composite is a hyperdoctrine.
+
+$$\pow\circ y: \T \longrightarrow [\T^\op,\Set] \longrightarrow \Pos$$
+
+Sieves, or right ideals, in a theory $\T$ provide a notion of predicate, or type. The Heyting algebra structure of subfunctors and the adjoints to substitution provide the constructors of intuitionistic predicate logic ($\S$\ref{sec:topos}).
+
+Because $\pow y$ is lax cartesian and colax closed, operations of $\T$ can be lifted to sieves and understood as type constructors ($\S$\ref{sec:stypes}). The compatibility of operations and their liftings gives that the former are \textit{polymorphic} with respect to the latter.
+
+These posets are complete and cocomplete, providing fixpoint operators and hence \textit{recursion} ($\S$\ref{ssec:rec}). Putting the data together, we give the \textit{structural type theory} of $\T$ ($\S$\ref{sec:typeth})
+
+We denote the resulting theory by $\omega\T$, which has the general structure:
+\arr{R@{\quad\quad}C@{\quad}l@{\quad}c@{\quad}r@{\quad\quad}C@{\quad}l}{
+  \textbf{kinds} & sorts & \tts\in \T && \textbf{constructors} & lifted ops & \ob{\ttf}:\pow y(\tts)\to \pow y(\ttt)\\
+  \textbf{types} & sieves & \varphi\rtail \T(-,\tts)&& \cdot & pred. logic & \lor,\land,\Rightarrow,\exists,\forall\\
+  \textbf{terms} & operations & \ttf:\tts\to\ttt && \cdot & fixpoints & \nu,\mu:\pow y(\tts)^{\pow y(\tts)}\to \pow y(\tts).}
+
+We demonstrate the type theory with predicates useful to distributed computing ($\S$\ref{sec:namelog}). This is a firewall:
+$$\msf{sole.in}(\alpha) := \nu\X.\; [\ob{\tti}(\alpha,\N.\X)\ttp\PP] \land \neg[\ob{\tti}(\neg[\alpha],\N.\PP)\ttp \PP].$$
+
+The basic idea is that of generating a \textit{logic over a type theory} \cite{jacobs}; we extend the case for second-order algebraic theories by the lifting of operations. The result is an algorithm that produces expressive type theories which enable high-level reasoning about the structure of terms in languages.
+
+The present work is connected to several existing ideas. Matching $\mu$-Logic \cite{matchlog} is a logic based on pattern-matching, which is used for program specification and verification in the K Framework \cite{kframe}; we generalize this logic to include signatures with binding operations.
+
+Parameterized algebraic theories \cite{param} consider a theory ``parameterized'' by a Lawvere theory using presheaves; this is closely connected to the present work. There is much to be done in connecting the work to categorical logic, type theory, and topos theory; this is an application and an introductory thesis.
+
+\subsection{Notation}
+\label{ssec:notate}
+
+A cartesian category is a category with finite products; a cartesian functor is one which preserves them. For algebraic theories, an $n$-ary operation is equivalent to a term with $n$ free variables.
+
+We denote the category of sets by $\Set$, a skeleton of the category of finite sets by $\F$, the category of partial orders by $\Pos$, the category of Heyting algebras by $\Hey$, and the 2-category of categories by $\Cat$. The 2-category of 2-categories, colax 2-functors, and colax natural transformations is denoted by $\mrm{2Cat}_{colax}$.
+
+We denote the (small) Yoneda embedding by $\widehat{-}:\Cat\to \Cat$, and sometimes $y(-)$ to avoid large hats; we use the same notation on the level of objects, writing $\hat{\ttt}=y(\ttt)=\T(-,\ttt)$. We take as given that $y$ is cartesian closed, and omit the isomorphisms involved. We also omit considerations of size.
+
+A presheaf on $C$ is a functor $P:C^\op\to \Set$; we denote the action $P(f):P(b)\to P(a)$ by $-\cdot f$. The sign $\int$ denotes a coend if there is a quantified variable on top; otherwise it denotes the Grothendieck construction.
+
+An exponential object $\ttt^\tts$ may alternately be written $[\tts,\ttt]$ or $\tts.\ttt$, as in the case of binding operations. We denote currying $\ttf:\tta\times \ttb\to \ttc$ by $\ttf^\bullet:\tta\to [\ttb,\ttc]$, and uncurrying $u:\tta\to [\ttb,\ttc]$ by $u^\circ:\tta\times \ttb\to \ttc$.
+
+\subsection{Acknowledgements}
+Thank you to John Baez, Mike Shulman, Nathanael Arkor, and Sam Staton for helpful conversations.
+
+\end{document}

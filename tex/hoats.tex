@@ -1,0 +1,126 @@
+\documentclass[stthol.tex]{subfiles}
+\begin{document}
+
+\section{Algebraic theories}
+\label{algthy}
+
+We can design and use languages, efficiently and effectively, by the method of \textit{presentation}. Algebraic structures are presented by a set of sorts $\tts\in \msc{T}$, operations $\ttf\in \msc{O}$, and equations $\ttf_1=\ttf_2\in \msc{E}$. For example, a monoid is a structure of the form:
+\arr{lll}{
+    \msc{T} = & \{\M\} &\\
+    \msc{O} = & \{\m:\M^2\to \M\ \; {,} \; \e:1\to \M\} & \\
+    \msc{E} = & \{\m(\m(x,y),z)=\m(x,\m(y,z)) & [\mtt{assoc}] {,}\\
+    & \m(e,x)=x \; {,} \; \m(x,e)=x & [\mtt{lunit}]\; {,} \; [\mtt{runit}] \}. }
+
+As in the case of presenting a particular monoid by generators and relations, such a presentation specifies the ``theory'' of such a structure: the \textit{free cartesian category} on a presentation $(\msc{T},\msc{O},\msc{E})$.
+% \arr{ll}{
+%   \textbf{objects} & \text{ finite products of } \tts \in \msc{T}\\
+%   \textbf{morphisms} & \text{ finite products and composites of }\\
+%   & \; \Delta_\tts:\tts\to\tts\times\tts \; , \; !_\tts:\tts\to 1 \; ,\text{ and } \ttf \in \msc{O}\\
+%   \textbf{equations} & \text{ congruence with axioms } \ttf_1=\ttf_2 \in \msc{E}. }
+
+\begin{definition}
+  An \textbf{algebraic theory} is a cartesian category $\T$ equipped with a presentation $(\msc{T},\msc{O},\msc{E})$.
+  The 2-category of algebraic theories, cartesian functors, and natural transformations is denoted $\Thy$.
+  The category of \textbf{models} of $\T$ in \textbf{context} $\C$ is the functor category $\Thy(\T,\C)$.
+\end{definition}
+
+Theories which are single-sorted, $\T$ for which $\msc{T}$ is a singleton, are known as \textit{Lawvere theories}. Lawvere initiated the categorical study of universal algebra by defining ``finite product theories'' in the 1963 thesis \cite{lawvere}. Soon after, Linton proved that Lawvere theories are equivalent to \textit{finitary monads} on $\Set$ \cite{linton}.
+
+Given a Lawvere theory $\T$, the \textit{free model} $f_\T:\Set\to \Thy(\T,\Set)$ is given by
+\arr{ll}{f_\T(X) \simeq & \int^{n\in \mathbb{F}} X^n\times \T(\tts^n,-).}
+
+This $f_\T$ is left adjoint to the forgetful functor $u_\T:\Thy(\T,\Set)\to \Set$ which evaluates a model at $\tts$. The induced monad $T:\Set\to \Set$ takes $X$ as a set of generators, and makes the set of formal terms $\ttf(x_1,\dots,x_n)$, subject to the equations of the theory. This gives a monadic adjunction.
+% \[\begin{tikzcd}
+%     \Set \arrow[rr,"f_\T",yshift=0.5em] && \Thy(\T,\Set). \arrow[ll,"u_\T",yshift=-0.5em]
+% \end{tikzcd}\]
+
+Functional programming uses monads to encapsulate data structures and model computational effects \cite{moggi}. By the equivalence above, these can be reformulated in terms of algebraic theories for more explicit presentation, as well as more direct connection to object-oriented programming \cite{hylandpower}.
+
+A reference for algebraic theories is \cite{algthys}.
+
+\subsection{Theories with binding}
+\label{ssec:bind}
+
+Languages such as the $\lambda$-calculus or $\uprho$-calculus cannot be described as algebraic theories. While cartesian categories are useful to both mathematics and computer science, there is an important syntactic construction which they cannot express: \cnt{how do we take an expression $e(x)$ and form the \textit{map} or the \textit{program} $x\mapsto e(x)$?}
+
+The key is to make explicit that every term has a \textit{context} of free variables. This is necessary because this process of forming maps changes the context: we take a distinguished free variable and ``bind'' it in the term. The canonical example of variable binding is $\lambda$ abstraction.
+\cnt{ \prf{
+    \ax{\Gamma, x}{x+1}
+    \rlab{\lambda}
+    \infer{\Gamma}{\lambda x.(x+1)} } }
+Before the inference rule, the variable $x$ is free in the term $x+1$; after the rule it is bound -- the bound variable is distinguished in such a way that we can define substitution:
+$$\lambda x.(x+1)\bullet 2 \; \Rightarrow \; (x+1)\mathbf{[2/x]} = 2+1 = 3.$$
+The syntax of binding is well-known to type theorists, and its semantics is understood to be given by cartesian closed categories \cite{holog}. While the idea is expressive, this notion of ``higher-order theory'' does not share the direct connection of algebraic theories to monads and universal algebra (\cite{twodim} 6.2).
+
+Fiore, Turi, and Plotkin expanded the notion of algebraic theory to include binding \cite{abssyn}; the work has been expanded to demonstrate monadicity \cite{soats}, and elaborate second-order logic \cite{hur}. The basic idea is to understand an operad as a set of terms indexed by context.
+$$\ob{\T}: \F\to \Set \hspace{2em} \ob{\T}(n) = \{t \; | \; n\vdash t\}$$
+A functor $\F\to\Set$ is a \textit{cartesian operad} if it is monoidal with respect to substitution tensor product $(\Set^\F,\bullet,\V)$. The functorial action reindexes variables, the monoidal unit $\nu_n:\V(n)=\F(1,n)\to \ob{\T}(n)$ gives variables-as-terms, and the multiplication
+$\mu:\ob{\T}\bullet\ob{\T}\Rightarrow \ob{\T}$ gives ``substitution'' or composition:
+\arr{rl}{
+  \mu_n: \int^m \ob{\T}^m(n)\times \ob{\T}(m) & \to \ob{\T}(n)\\
+  \left[\langle \mtt{o_1,\dots,o_m}\rangle: \tts^n\to\tts^m, \ttf:\tts^m\to \tts \right] & \mapsto \ttf(\mtt{o_1,\dots,o_m}):\tts^n\to \tts. }
+
+Cartesian operads are equivalent to Lawvere theories, but theories as ``context-indexed sets'' admit constructions which theories as categories do not: exponentiating by representables gives \textit{context extension}.
+$$\ob{\T}^{\V}(n)\simeq \Set^\F(\F(n,-)\times \F(1,-),\ob{\T}) \simeq \Set^\F(\F(n+1,-),\ob{\T}) \simeq \ob{\T}(n+1).$$
+We can then describe the inference rule for $\lambda$ abstraction as a natural transformation:
+$$\lambda:\ob{\T}^\V\Rightarrow \ob{\T} \hspace{2em} \lambda_n: \ob{\T}(n+1)\to \ob{\T}(n).$$
+So in the same way that the structure of monoids is given by an endofunctor on $\Set$, the pure $\lambda$-calculus is given by the signature for variables, application, and $\lambda$ abstraction.
+$$\Lambda:\Set^\F\to \Set^\F \hspace{2em} \Lambda(\ob{\T}) = \V+\ob{\T}^2+\ob{\T}^\V$$
+Hence, a class of monads on $\Set^\F$ correspond to ``operads with binding''. This notion of theory is equivalent to a category which is not closed, but equipped with a set of objects which serve as the binding types \cite{soats}.
+
+\begin{definition}
+  An object $\tts\in \T$ is \textbf{exponentiable} if for all $\ttt$ there is an object $\ttt^\tts$, equipped with a map $ev_{\tts,\ttt}:\tts\times \ttt^\tts \to \ttt$ which for every $u:\tta\times \tts\to \ttt$ there is a unique $u^\bullet:\tta\to \ttt^\tts$ so that $u=ev_{\tts,\ttt}\circ (u^\bullet\times id_\tts)$.
+  A functor $F:\T\to \C$ \textbf{preserves} the exponentiable object $\tts$ if $F(\tts)$ is exponentiable and for all $\ttt$, $ev^\bullet_{\tts,\ttt}:F(\ttt^\tts)\simeq F(\ttt)^{F(\tts)}$ and $F(ev_{\tts,\ttt})=ev_{F(\tts),F(\ttt)}$. We call $F$ \textit{exponent} if it preserves all exponentiable objects.
+\end{definition}
+
+\begin{definition}
+  A \textbf{second order algebraic theory} $\T$ is a cartesian category equipped with a set of exponentiable objects $\msc{X}$, given by a presentation $\langle (\msc{T},\msc{O},\msc{E}),\msc{X} \rangle$. The 2-category of second-order theories, cartesian exponent functors, and natural transformations is denoted $\mrm{SOAT}$. The category of \textbf{models} of $\T$ in \textbf{context} $\mrm{C}$ is $\mrm{SOAT}(\T,\C)$.
+\end{definition}
+
+The object $\ttt^\tts$ represents terms of type $\ttt$ with a free variable of type $\tts$, and $ev$ substitutes a term of type $\tts$ for the free variable. Operations $\ttf:\ttt^\tts\to \tta$ are understood as binding a free variable $x.t:\tts.\ttt \mapsto \ttf(t):\tta$. Though we do not need it here, second-order theories have an explicit syntax using metavariables \cite{soats}.
+
+% ******* Second-order theories are equivalent to multi-sorted parameterized algebraic theories \cite{param}, which are equivalent to sifted-colimit preserving monads on $[\F^{\msc{T}},\Set]$.
+
+Fiore et. al. continue the program of ``algebraic type theory'', which uses \textit{generalized operads} \cite{genop} to encapsulate richer type theoretic notions such as polymorphism \cite{polythy} and dependency \cite{depthy}.
+
+\subsection{The $\uprho$-calculus}
+\label{ssec:rho}
+
+The $\uprho$-calculus \cite{rhocal} has two sorts, processes $\PP$ and names $\N$. These act as code and data respectively, and the operations of reference $\ttr$ and dereference $\ttd$ transform one into the other. Terms are built up from the one constant, the null process $\ttz$. The two basic actions of a process are output $\tto$ and input $\tti$, and parallel $\vert$ gives binary interaction: these earn their names in the communication rule.
+
+\begin{definition}
+\textbf{$\uprho$-calculus}
+\arr{cll@{\quad\quad}cll@{\quad\quad\quad}c@{\quad}l}{
+    \ttz: &1 &\to \PP & \vert: & \PP\times\PP & \to \PP & (\PP,\vert,\ttz) & \text{commutative monoid}\\
+    \ttr: & \PP & \to \N &  \mtt{out}: & \N\times\PP & \to \PP & \text{reify} & \ttd\ttr(\p)=\p\\
+    \ttd: & \N & \to \PP & \mtt{in}: & \N\times\PP^\N & \to \PP & \text{comm} & \mtt{out(n,q)\ttp in(n,x.p) = p[@q/x]}}
+\end{definition}
+  % In the syntax of second-order theories \cite{soats}, these operations supply the inference
+
+% \cnt{ \prf{
+%     \ax{\Theta\tri\Gamma,\vec{x_i}:\vec{\tts_i}}{t_i:\ttt_i \; (1\leq i\leq k)}
+%     \rlab{\{\ttf:\vec{\tts_1}.\ttt_1,\dots,\vec{\tts_k}.\ttt_k\to \ttt \}}
+%     \infer{\Theta\tri\Gamma}{\ttf(\vec{x_1}.t_1,\dots,\vec{x_k}.t_k):\ttt} } }
+
+%   and the equations give axioms
+%   \arr{ll}{
+%     \p:\PP \tri - \vdash \ttd\ttr(\p) \equiv \p : \PP.\\
+%     \n:\N, \p:[\N]\PP, \q:\PP \tri - \vdash \tto(\n,\q)|\tti(\n,\mtt{x}.\p) \equiv \p[@(\q)/\mtt{x}] : \PP. }
+
+  \textbf{Note}\quad
+  The reader may see that we have equations rather than \textit{reductions}; this of course oversimplifies the operational semantics of concurrent languages. The method of Plotkin and Turi \cite{opsem} applies to languages without binding, and second-order logic with rewriting has been given in \cite{hur}. Incorporating this aspect is necessary to the project of structural types for algebraic theories.
+
+  \begin{example}
+  Though the $\uprho$-calculus has a concise presentation, it is remarkably expressive. The $\lambda$-calculus embeds into the $\pi$-calculus \cite{polyadic}, and the $\pi$-calculus embeds into the $\uprho$-calculus \cite{rhocal}. For example, replication is used to make $\pi$-calculus processes persist over time, particularly in defining recursive processes. This can be expressed in the $\uprho$-calculus without a designated operator, using reflection:
+\arr{l@{\quad}ll}{
+  \text{pick a name} & \n, &\\
+  \text{define copier} & c(\n)& := \tti(\n, \ttx.\{\tto(\n,\ttd\ttx)\ttp \ttd\ttx\})\\
+  \text{and replicator} & !(-)_\n & := \tto(\n,\{c(\n)\ttp -\})\ttp c(\n).\\
+  \text{Then we have} & !(\p)_\n & = \tto(\n,\{c(\n)\ttp \p\})\ttp \tti(\n, \ttx.\{\tto(\n,\ttd\ttx)\ttp \ttd\ttx\})\\
+  && = \tto(\n,\{c(\n)\ttp \p\})\ttp \ttd\ttr\{c(\n)\ttp \p\}\\
+  && = \tto(\n,\{c(\n)\ttp \p\})\ttp c(\n)\ttp \p \hspace{2em} = \;\; !(\p)_\n \ttp \p.}
+\end{example}
+
+In demonstrating Namespace Logic $\S$\ref{sec:namelog}, such recursive processes are terms of recursive types; these express properties of persistent behavior. We will give the expressive example of a predicate $\msf{sole.in}$, which for a namespace $\alpha$ expresses ``can always input on $\alpha$, and can never input on $\neg\alpha$'' -- effectively a kind of firewall.
+
+\end{document}

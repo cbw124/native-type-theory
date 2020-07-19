@@ -1,0 +1,27 @@
+Structural Type Theory of Higher Order Languages
+[[http://lics.siglog.org/][LICS]]: 29 June 2021 (due 20 Jan)
+
+* goals
+** generalize to HOATs
+** presentation of type system
+*** subtyping
+*** recursion
+inductive rules
+*** polymorphism
+incorporate into semantics?
+**** Shulman
+*** rewriting?
+** transfer to models
+** logical meaning of colaxity
+** modal logic, behavior types
+relation of structure and behavior?
+** monad on (poly)HOAT
+(what are its algebras?)
+** make resources
+*** K Framework code
+*** webpage of long paper
+** connect to classifying
+* notes
+** [[https://en.wikibooks.org/wiki/LaTeX/Modular_Documents][Modular Documents]]
+** keep bothering Staton and Fiore
+** make exposition, then condense

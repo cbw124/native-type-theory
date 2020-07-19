@@ -1,0 +1,132 @@
+\documentclass[stthol.tex]{subfiles}
+\begin{document}
+
+\section{Topos of presheaves}
+\label{sec:topos}
+
+We can embed a second-order theory such as the $\uprho$-calculus into a category with rich internal logic, to utilize the structure of code by reasoning about subclasses of terms.
+
+A category of presheaves $[\T^\op,\Set]=: \widehat{\T}$ is a \textit{topos} \cite{sheavesinGL}: it is cartesian closed, finite limits are given pointwise, and exponentials and subobject classifer are given by
+$$[P,Q](\tts)= \widehat{\T}(\T(-,\tts)\times P,Q)\qquad\qquad \Omega(\tts)=\{P \; | \; P\rtail \T(-,\tts)\}.$$
+
+The subobject classifier allows us to reason with presheaves in the language of sets, using intuitionistic predicate logic. The definition above can be understood in light of the equivalence:
+$$\{\text{subfunctors of } \T(-,\tts)\} \simeq \{\text{sieves on } \tts\}.$$
+
+A \textit{sieve} on $\tts$ is a class of morphisms in $\T$ with codomain $\tts$, which is closed under precomposition. This generalizes the notion of right ideal of a monoid, which gives the equivalence: the representable $\T(-,\tts)=:\hat{\tts}$ is a right $\T$-module, and sieves on $\tts$ are submodules thereof.
+
+The simplest example besides the maximal sieve $\T(-,\tts)$ is a \textit{singleton sieve}:
+$$\ttf:\tts\to \ttt\quad \mapsto\quad S(\ttf)(\ttrr):= \{\ttop:\ttrr\to \ttt\; |\; \exists u:\ttrr\to \tts.\; \ttop=\ttf(u)\}.$$
+
+As suggested by notation, our interest is sieves in a theory $\T$: these act as predicates or \textit{types}. We recall that $\Omega$ is an internal Heyting algebra, providing the constructors of predicate logic; and in $\S$\ref{sec:stypes} we demonstrate how operations of $\T$ can be lifted to the level of sieves, providing algebraic type constructors.
+
+For example, if $\T$ is the theory of monoids, we can construct the sieve of ``prime operations''
+$$\mtt{prime} := \neg[S(\e)]\land  \neg[\ob{\m}(\neg[S(\e)],\neg[S(\e)])].$$
+%We construct the analogous predicate in the $\uprho$-calculus for single-threaded processes.
+
+\subsection{The subobject functor}
+\label{ssec:sub}
+
+The subobject classifier is so named because it represents the (contravariant) \textit{subobject functor}
+$$\widehat{\T}(-,\Omega)\simeq \Sub(-):\widehat{\T}^\op\to \Pos.$$
+Characteristic maps $\chi_\varphi:A\to \Omega$ correspond to subobjects $\varphi\rtail A$, and precomposing by $f:B\to A$ corresponds to pullback $f^*:\Sub(A)\to \Sub(B)$.
+
+For any presheaf $A$, subfunctors of $A$ form a complete Heyting algebra. They are ordered by inclusion, with meet and join defined by pointwise intersection and union. Implication is defined:
+$$(\psi\Rightarrow \varphi)(\ttt) := \{a\in A(\ttt) \; | \; \forall u:\tts\to \ttt. \; a\cdot u\in \psi(\tts)\Rightarrow a\cdot u\in \varphi(\tts)\}$$
+and negation is $\neg[\varphi]:= \varphi \Rightarrow \emptyset$.
+
+\begin{lemma}
+The subobject functor is a \textit{hyperdoctrine} \cite{hyper}: for each $f:B\to A$ there is a triple adjunction
+$\exists_f \dashv f^* \dashv \forall_f$ which satisfies that quantification commutes with substitution and $\forall_f$ preserves implication. While $f^*$ is a morphism of Heyting algebras, $\exists_f$ and $\forall_f$ in general only preserve join and meet, respectively.
+\end{lemma} \vspace*{-\baselineskip}
+\[\begin{tikzcd}
+    \Sub(B) \arrow[rr,"\exists_f",yshift=0.6em] \arrow[rr,"\forall_f",yshift=-0.6em,swap] && \Sub(A) \arrow[ll,"f^*" description]
+  \end{tikzcd}\]
+
+These adjoints are intuited in the case of $\Set$. For a function $f:A\to B$, the left adjoint $\exists_f$ is \textit{direct image}, and the right adjoint $\forall_f$ is \textit{saturated image}, where $\forall_f(U)$ is the maximal subset of $\exists_f(U)$ whose preimage is contained in $U$. In a presheaf topos $\widehat{\T}$ these morphisms are defined for a subobject $\varphi \rtail A$:
+\arr{ll}{
+    \exists_f(\varphi)(\ttt) = & \{b\in B(\ttt) \; | \; \exists u:\tts\to\ttt.\; \exists a\in A.\; b\cdot u = f_{\tts}(a) \wedge a\in \varphi(\tts)\}\\
+    \forall_f(\varphi)(\ttt) = & \{b\in B(\ttt) \; | \; \forall u:\tts\to\ttt.\; \forall a\in A.\; b\cdot u = f_{\tts}(a) \Rightarrow a\in \varphi(\tts)\}. }
+
+
+\textbf{Note}\quad There are three possible actions of $\Sub$, one contravariant and two covariant. When lifting operations to sieves, we focus on the left adjoint, but each is useful: the middle adjoint splits terms apart by ``undoing'' operations, while the right adjoint applies operations ``securely'', giving only the terms which could have come from that application. These are very expressive.
+
+The composite $\T\to \widehat{\T}\to \Pos$ induces a preorder fibration $\int\Sub\circ y\to \widehat{\T}$, providing the canonical example of a ``logic over a type theory'' \cite{jacobs}. We expand on this idea, using the fact that $\Sub$ is both lax cartesian and colax closed to lift operations of a second-order algebraic theory.
+
+\subsection{Lax structure}
+\label{ssec:lax}
+We henceforth use $\pow:\widehat{\T}\to \Pos$ to denote the subobject functor with $\pow(f):=\exists_f$. Let $A,B:\T^\op\to \Set$.
+
+Every functor has \textit{colax} preservation of products: there is a canonical natural transformation given by the pairing of the projections. For $R\rtail A\times B$ and denoting $R_A(\ttt) = \{a\in A(\ttt)\; |\; \exists b\in B(\ttt)\; (a,b)\in R(\ttt)\}$,
+$$\lambda_{AB}:\pow(A\times B)\to \pow(A)\times \pow(B)\quad \text{by}\quad \lambda_{AB}(R)=(R_A,R_B).$$
+We are interested in \textit{lax} preservation of products, denoted $\sqcap$, so that we can lift operations
+$$\ttf:\tta\times \ttb\to \ttc\quad \mapsto \quad\ob{\ttf}:= \pow(\ttf)\circ \sqcap:\pow(y(\tta))\times \pow(y(\ttb))\to \pow(y(\tta\times \ttb)) \to \pow(y(\ttc)).$$
+
+\begin{lemma}
+  Let $(\pow,\lambda):\widehat{\T}\to \Pos$ be the colax subobject functor. Define
+  $$\sqcap_{AB}:\pow(A)\times\pow(B)\to \pow(A\times B)\quad \text{by} \quad \sqcap_{AB}(U,V) = U\times V.$$ Then $(\pow,\sqcap)$ is a lax functor, and for all $A,B\in \widehat{\T}$ the component $\sqcap_{AB}$ is right adjoint to $\lambda_{AB}$.
+\end{lemma}
+
+By the terminology of \cite{graphreg}, $(\pow,\sqcap)$ is \textit{adjoint-lax}: every component of the laxor $\sqcap_{AB}$ has a left adjoint. Moreover, we can lift binding operations: by Lemma \ref{sec:lax}, we can define
+$$\ttf:[\tts,\ttt]\to \tta\quad \mapsto \quad\ob{\ttf}:= \pow(\ttf)\circ \mrm{R_{y(\tts)y(\ttt)}}:[\pow(y(\tts)),\pow(y(\ttt))]\to \pow(y([\tts,\ttt])) \to \pow(\tta).$$
+The product laxor $\sqcap$ gives an ``exponent laxor'' $\Lambda$ which is the currying of evaluation.
+
+For sets, we have definition by pointwise evaluation:
+$$\Lambda_{AB}:\pow([A,B])\to [\pow(A),\pow(B)]\quad \text{by} \quad \Lambda_{AB}(X)(U) = \{ev(f,a)\; |\; f\in X, a\in U\}.$$
+For presheaves, define
+$$\Lambda_{AB}:\pow([A,B])\to [\pow(A),\pow(B)]\quad \text{by} \quad \Lambda_{AB}(X)(S)(\ttc) = \{ev(f,a)\; |\; f\in X(\ttc), a\in S(\ttc)\}.$$
+
+For sets, $\Lambda_{AB}$ has a right adjoint sending a power set map $F$ to the subset of functions that ``respect'' $F$:
+$$\mrm{R}_{AB}(F) = \{f:A\to B\; |\; \forall U\in \pow(A).\; \pow(f)(U)\subseteq F(U)\}.$$
+This generalizes to presheaves. Let $A,B:\T^\op\to \Set$, and recall that $[A,B](\ttc)= \widehat{\T}(y(\ttc)\times A,B)$.
+
+\begin{definition}
+  We say that $f\in [A,B](\ttc)$ \textbf{respects} a functor $F:\pow(A)\to \pow(B)$ if every sieve $S$ on $A$ paired with $y(\ttc)$ has direct image contained in $F(S)(\ttc)$:
+  $$\{f \text{ respects } F\}\; :=\;\forall S\in \pow(A).\; \pow(f)(y(\ttc)\times S)\subseteq F(S)(\ttc).$$
+  \end{definition}
+
+\begin{lemma}
+\label{sec:lax}
+Let $(\pow,\Lambda):\widehat{\T}\to \Pos$ be the lax closed subobject functor. Define
+$$\mrm{R}_{AB}:[\pow(A),\pow(B)]\to \pow([A,B])\quad \text{by} \quad \mrm{R}_{AB}(F)(\ttc) = \{f\in[A,B](\ttc)\; |\; f \text{ respects } F\}.$$
+Then for all $A,B\in \widehat{\T},$ $\mrm{R}_{AB}$ is right adjoint to $\Lambda_{AB}$.
+\end{lemma}
+
+\begin{proof}
+  Suppose $X\in \pow([A,B])$ is a subfunctor of an exponential of presheaves, and that $${\Lambda(X)\leq F}:\pow(A)\to \pow(B).$$ This means for all subfunctors $S\in \pow(A)$, $\Lambda(X)(S)\leq F(S)\in \pow(B)$; and this in turn means for all objects $\ttc\in \T$ we have $\Lambda(X)(S)(\ttc)\subseteq F(S)(\ttc)$. Expanding the definition,
+  $$\Lambda(X)(S)(\ttc)=\{ev(f,u)\; |\; f\in X(\ttc), u\in S(\ttc)\}\subseteq F(S)(\ttc).$$
+  This pointwise evaluation can be reformulated as a union over all $f\in X(\ttc)$. For all $S$ and $\ttc$, we have
+  $$\Lambda(X)(S)(\ttc)=(\bigcup_{f\in X(\ttc)} \pow(f)(y(\ttc)\times S))\subseteq F(S)(\ttc).$$
+  Then by the universal property of coproduct, this is equivalent to every $f$ having $\pow(f)(y(\ttc)\times S)\subseteq F(S)(\ttc)$. This is precisely the condition for $f\in \mrm{R}(F)(\ttc)$. Hence we have the desired result,
+  $$X\leq R(F)\in \pow([A,B]).$$
+  \vspace*{-\baselineskip}
+\end{proof}
+
+Hence $\pow$ is not only adjoint-lax with respect to products, but exponents as well. This is expressive: considering subfunctors as predicates, the family of adjunctions
+\[\begin{tikzcd}
+    \mrm{R}_{AB} \vdash \Lambda_{AB}: & \left[\pow(A){,}\pow(B)\right] \arrow[r,yshift=0.4em] & \pow([A,B]) \arrow[l,yshift=-0.4em]
+  \end{tikzcd}\]
+transforms maps of predicates to predicates on contexts, and vice versa. This allows for the evaluation of formulae on the level of predicates, providing \textit{type-level binding}.
+
+Given subsets $\varphi\rtail A$ and $\psi\rtail B$, consider the subset of functions for which the direct image of the former is contained in the latter. Here, we use the Heyting algebra implication to express ``if $x\in \varphi$, then $f(x)\in \psi$''. The same reasoning applies to subfunctors.
+
+\begin{definition}
+  Let $\pow:\widehat{\T}\to \Pos$ be as above. Define the \textbf{subobject hom} to be the composite
+\[\begin{tikzcd}
+    \pow(A)^\op\times \pow(B) \arrow[rr, "\multimap",dotted] \arrow[d, "\pi^*\times ev^*",swap] && \pow([A,B])\\
+    \pow(A\times [A,B])^\op\times \pow(A\times [A,B]) \arrow[rr,"\Rightarrow", swap] && \pow(A\times [A,B]). \arrow[u,"\exists_\pi", swap]
+  \end{tikzcd}\]
+Hence we have for $\varphi\rtail y(\tts)$ and $\psi\rtail y(\ttt)$, using $\tilde{\cdot}$ for uncurrying,
+$$(\varphi\multimap \psi)(\ttt) = \{u(t):\ttt\to [A,B]\; |\; % \forall \tts\in \T.\;
+  \forall \ttx:\tts\to A.\; \ttx\in \varphi(\tts)\Rightarrow \tilde{u}(t,\ttx)\in \psi(\tts)\}.$$
+\end{definition}
+
+In a language like the $\uprho$-calculus, the subobject hom $(\varphi\multimap \psi) \rtail [\tts,\ttt]$ gives the type of $\tts.\ttt$-\textit{contexts}, such that if a term of type $\varphi$ is substituted, the resulting term is of type $\psi$.
+
+Note that because the hom is contravariant in the first variable, this reverses the subtyping relation.
+
+% \begin{lemma}
+% The total category of the subobject fibration $\int\Omega y \to \T$ has products given by $\sqcap_\exists$, exponentiable objects given by the subobjects of $\ttt\in \msc{X}$, and exponentials given by $\multimap$. 
+% \end{lemma}
+% This is an example of ``fiberwise structure''. \cite{jacobs}
+
+\end{document}
