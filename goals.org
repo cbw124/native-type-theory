@@ -2,26 +2,48 @@ Structural Type Theory of Higher Order Languages
 [[http://lics.siglog.org/][LICS]]: 29 June 2021 (due 20 Jan)
 
 * goals
-** generalize to HOATs
+** TODO monad on 2OAT
+Grothendieck construction of model in Pos
+*** what are its algebras?
 ** presentation of type system
-*** subtyping
-*** recursion
+utilize the Mitchell-Benabou language
+*** semantics
+**** TODO combine hyperdoctrine with model
+*** features
+**** subtyping & recursion
 inductive rules
-*** polymorphism
-incorporate into semantics?
-**** Shulman
-*** rewriting?
+**** polymorphism
+Fiore: Polymorphic SOATs [send]
+parametric poly & generics (Java)
+**** rewriting
+preservation of types
+***** enriched?
+check V topos => Psh(V) topos
+*** TODO logic
+**** colaxity
+**** conservative extension
+**** soundness/completeness
+** generalize to HOATs
+(n+1)OATs are monads on nOATs, with 1OATs = Law and 0OATs = Set
+*** examples of 3OATs and higher (control operators)
+**** TODO Ambient calculus?
+**** kinds in Haskell, templates in C
 ** transfer to models
-** logical meaning of colaxity
 ** modal logic, behavior types
 relation of structure and behavior?
-** monad on (poly)HOAT
-(what are its algebras?)
+** implementation
+*** poor man's K (diy or no?)
+they treat type-checking as another form of execution
+**** (gph-homo)SOAT -> parser, (compile-time) type-checker, execution engine
+read in terms -> AST (with types) <expected type, term> -> check types -> then rewrites
+how to turn a Gph-SOAT into a K file, with type-checking
 ** make resources
-*** K Framework code
 *** webpage of long paper
-** connect to classifying
 * notes
 ** [[https://en.wikibooks.org/wiki/LaTeX/Modular_Documents][Modular Documents]]
 ** keep bothering Staton and Fiore
 ** make exposition, then condense
+** connected ideas
+*** structural type system
+we can do structure of code, rather than just data.
+*** classifying topos
