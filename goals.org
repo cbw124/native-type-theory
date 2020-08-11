@@ -2,8 +2,13 @@ Structural Type Theory of Higher Order Languages
 [[http://lics.siglog.org/][LICS]]: 29 June 2021 (due 20 Jan)
 
 * goals
+** contextualize
+*** logic over a type theory
+*** TODO type refinement
+*** logical relations
 ** TODO monad on 2OAT
 Grothendieck construction of model in Pos
+*** hyperdoctrine and the model
 *** what are its algebras?
 ** presentation of type system
 utilize the Mitchell-Benabou language
@@ -23,22 +28,36 @@ check V topos => Psh(V) topos
 **** colaxity
 **** conservative extension
 **** soundness/completeness
-** generalize to HOATs
+** transfer predicates to models
+** TODO examples
+*** behavior!
+*** code queries
+*** generators and relations
+specify/query substructures
+**** monoids
+***** prime, ideals
+**** graphs
+***** query subgraphs
+**** trees
+*** classify algorithms
+arrow type
+**** sort vs shuffle
+codomain verifiable in polytime, etc
+*** namespace logic
+** formally define encodings
+** generalize to HOATs?
 (n+1)OATs are monads on nOATs, with 1OATs = Law and 0OATs = Set
-*** examples of 3OATs and higher (control operators)
-**** TODO Ambient calculus?
-**** kinds in Haskell, templates in C
-** transfer to models
-** modal logic, behavior types
-relation of structure and behavior?
+*** Ambient calculus
+*** kinds in Haskell, templates in C
 ** implementation
 *** poor man's K (diy or no?)
 they treat type-checking as another form of execution
 **** (gph-homo)SOAT -> parser, (compile-time) type-checker, execution engine
 read in terms -> AST (with types) <expected type, term> -> check types -> then rewrites
 how to turn a Gph-SOAT into a K file, with type-checking
-** make resources
-*** webpage of long paper
+** [write expository material]
+** [modal logic, behavior types]
+the parallel paper
 * notes
 ** [[https://en.wikibooks.org/wiki/LaTeX/Modular_Documents][Modular Documents]]
 ** keep bothering Staton and Fiore
