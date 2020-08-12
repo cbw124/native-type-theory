@@ -28,10 +28,14 @@ check V topos => Psh(V) topos
 **** colaxity
 **** conservative extension
 **** soundness/completeness
-** transfer predicates to models
+** other important
+*** TODO transfer predicates to models
+*** demonstrate translations (functoriality)
+*** formally define encodings
 ** TODO examples
 *** behavior!
 *** code queries
+*** namespace logic
 *** generators and relations
 specify/query substructures
 **** monoids
@@ -39,12 +43,8 @@ specify/query substructures
 **** graphs
 ***** query subgraphs
 **** trees
-*** classify algorithms
-arrow type
+*** classify algorithms (arrow type)
 **** sort vs shuffle
-codomain verifiable in polytime, etc
-*** namespace logic
-** formally define encodings
 ** generalize to HOATs?
 (n+1)OATs are monads on nOATs, with 1OATs = Law and 0OATs = Set
 *** Ambient calculus
